@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>plugin.workoliday.TransformerTemplateRoot</externalid>
+      </contentid>
+      <input-template>
+        <major>InputTemplate</major>
+        <externalid>p.TemplateRoot</externalid>
+      </input-template>
+      <security-parent>
+        <major>Department</major>
+        <externalid>p.sitengine.ContentCreatorTemplates.d</externalid>
+      </security-parent>
+    </metadata>
+  </content>
+  
+   <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>plugin.workoliday.TransformerTemplates</externalid>
+      </contentid>
+      <input-template>
+        <externalid>p.TemplateCategory</externalid>
+      </input-template>
+      <security-parent>
+        <externalid>plugin.workoliday.TransformerTemplateRoot</externalid>
+      </security-parent>
+    </metadata>
+  </content>
+  
+  <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>plugin.workoliday.TransformerTemplateRoot</externalid>
+      </contentid>
+    </metadata>
+    <component group="polopoly.Content" name="name">Transformer Templates</component>
+    <component group="polopoly.ContentLists" name="polopoly.Department">default</component>
+    <contentref group="polopoly.Department" name="0">
+      <contentid>
+        <major>Department</major>
+        <externalid>plugin.workoliday.TransformerTemplates</externalid>
+      </contentid>
+    </contentref>
+  </content>
+  
+  <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>plugin.workoliday.TransformerTemplates</externalid>
+      </contentid>      
+    </metadata>
+    <component name="name" group="polopoly.Content">Transformer</component>
+    <component group="polopoly.ContentLists" name="polopoly.Department">default</component>
+    <component group="polopoly.Client" name="categoryMajor">Article</component>
+    <contentlist>
+      <entry mode="modify" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>plugin.workoliday.TransformerRSS</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>
+      <entry mode="modify" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>plugin.workoliday.TransformerXSL</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>
+      <entry mode="modify" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>plugin.workoliday.TransformerVM</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>
+      <entry mode="modify" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>plugin.workoliday.TransformerJS</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>
+    </contentlist>
+  </content>  
+  
+  <content>
+    <metadata>
+      <contentid>
+        <major>Department</major>
+        <externalid>plugin.workoliday.Templates</externalid>
+      </contentid>
+    </metadata>
+    <contentlist>
+      <entry mode="modify" withMetadata="false">
+        <metadata>
+          <referredContent>
+            <contentid>
+              <externalid>plugin.workoliday.TransformerTemplateRoot</externalid>
+            </contentid>
+          </referredContent>
+        </metadata>
+      </entry>      
+    </contentlist>
+  </content>
+</batch>

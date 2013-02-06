@@ -1,0 +1,103 @@
+package com.atex.plugins.workoliday.transformer;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.axis.utils.StringUtils;
+import org.apache.velocity.tools.generic.EscapeTool;
+
+import com.atex.plugins.workoliday.util.PolicyUtils;
+import com.polopoly.cm.policy.ContentPolicy;
+import com.polopoly.util.StringUtil;
+
+/**
+ * Transformer to deliver header or footer slot of the 
+ * site as JavaScript to be used by 3rd parties (includes). Party!
+ * 
+ * @author sarasprang
+ */
+public class JSTransformer extends ContentPolicy implements Transformer {
+    private static final Logger LOG = Logger.getLogger(JSTransformer.class.getName());
+    //RegExp's are self explanatory :) , I've used a couple to find relative URLs
+                                                     //"([^\\\\])(\"|')/(.*)\\2"
+                                                     //"([^\\\\])(\"|')/(.*?)\\2"
+    private static final Pattern relativeUrlPattern = Pattern.compile("([^\\\\])(\"|')/((?:\\\\\\2|(?!\\2).)*)\\2");
+    private static final String URL_PADDER = "$1$2%s/$3$2";
+    private static final String COMPONENT_URLPREFIX = "urlPrefix";
+    private static final String COMPONENT_JSCODE = "jsCode";
+
+    @Override
+    public String transform(byte[] resource, Map<String, Object> params) throws TransformationException {
+        String html = new String(resource);
+        EscapeTool esc = new EscapeTool();
+        if (StringUtil.isEmpty(html)) {
+            throw new TransformationException("No HTML was supplied, aborting transformation", null);
+        }
+        String url = String.format(URL_PADDER, PolicyUtils.getSingleValue("", this, COMPONENT_URLPREFIX));
+
+        String toReturn = "";
+        StringWriter stringWriter = null;
+        PrintWriter writer = null;
+        String[] array = html.split("[\\r\\n]+");
+        try {
+            stringWriter = new StringWriter();
+            writer = new PrintWriter(stringWriter);
+            for (String string : array) {
+                addJavaScriptString(esc, url, writer, string);
+            }
+            writer.println(PolicyUtils.getSingleValue("", this, COMPONENT_JSCODE));
+            toReturn = stringWriter.toString();
+        } catch (Exception e) {
+            LOG.log(Level.WARNING, "Encountered exception while printing to stream", e);
+        } finally {
+            if (stringWriter != null) {
+                stringWriter.flush();
+            }
+            if (writer != null) {
+                writer.flush();
+                writer.close();
+            }
+        }
+        return toReturn;
+    }
+
+    /**
+     * Adds all html up as JavaScript strings.
+     * 
+     * @param esc        Tool used for escaping strings to valid JS.
+     * @param url        Used to extract absolute URLs.
+     * @param writer     String writer used for appending strings to output.
+     * @param string     String to append as JS.
+     */
+    private void addJavaScriptString(EscapeTool esc, String url, PrintWriter writer, String string) {
+        string = string.trim();
+        //Important: Our RegExp is matching non-escaped Strings
+        string = extractURL(string, url);
+        string = esc.javascript(string);
+        if (!StringUtils.isEmpty(string)) {
+            writer.println(String.format("document.write('%s');", string));
+        }
+    }
+
+    /**
+     * Ugly quick-fix way to repair relative URLs.
+     * 
+     * @param toParse    String to extract relative URLs from.
+     * @param host       To append to the relative URL.
+     * @return String with absolute URL in.
+     */
+    private String extractURL(String toParse, String host) {
+        Matcher tMatcher = relativeUrlPattern.matcher(toParse);
+        String toReturn = tMatcher.replaceAll(host);
+        if (toReturn.length() != toParse.length()) {
+            LOG.log(Level.FINE, String.format("Converted: '%s' To: '%s'", toParse, toReturn));
+        }
+        return toReturn;
+    }
+
+}

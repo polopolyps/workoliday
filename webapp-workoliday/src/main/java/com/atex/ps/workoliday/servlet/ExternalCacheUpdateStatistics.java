@@ -1,0 +1,119 @@
+package com.atex.ps.workoliday.servlet;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ExternalCacheUpdateStatistics implements
+        ExternalCacheUpdateStatisticsMBean {
+
+    // Total number of contentIds that got fetched from solr
+    private long totalNumberOfContentsInIndex = 0L;
+
+    // Total number of successful content updates
+    private long numberOfSuccessfulUpdates = 0L;
+
+    // Total number of failed content updates
+    private long numberOfFailedUpdates = 0L;
+
+    // Map of contentId, url that is failing
+    private Map<String, EventStatistics> failedUpdatesMap = Collections
+            .synchronizedMap(new HashMap<String, EventStatistics>());
+
+    private Map<String, EventStatistics> successfulUpdatesMap = Collections
+            .synchronizedMap(new HashMap<String, EventStatistics>());
+
+    @Override
+    public String[] getFailedUpdatesTopList() {
+        String[] topList = new String[0];
+        Collection<EventStatistics> values = failedUpdatesMap.values();
+        if (values.size() > 0) {
+            ArrayList<EventStatistics> sortedList = new ArrayList<EventStatistics>(
+                    values);
+            Collections.sort(sortedList);
+            topList = new String[sortedList.size()];
+            for (int i = 0; i < sortedList.size(); i++) {
+                EventStatistics statistics = sortedList.get(i);
+                topList[i] = statistics.toString();
+            }
+        }
+        return topList;
+    }
+
+    @Override
+    public String[] getSucceededUpdatesTopList() {
+        String[] topList = new String[0];
+        Collection<EventStatistics> values = successfulUpdatesMap.values();
+        if (values.size() > 0) {
+            ArrayList<EventStatistics> sortedList = new ArrayList<EventStatistics>(
+                    values);
+            Collections.sort(sortedList);
+            topList = new String[sortedList.size()];
+            for (int i = 0; i < sortedList.size(); i++) {
+                EventStatistics statistics = sortedList.get(i);
+                topList[i] = statistics.toString();
+            }
+        }
+        return topList;
+    }
+
+    @Override
+    public void resetStatistics() {
+        failedUpdatesMap.clear();
+        successfulUpdatesMap.clear();
+        numberOfFailedUpdates = 0L;
+        numberOfSuccessfulUpdates = 0L;
+    }
+
+    @Override
+    public long getNumberOfFailedUpdates() {
+        return numberOfFailedUpdates;
+    }
+
+    @Override
+    public long getNumberOfSuccessfulUpdates() {
+        return numberOfSuccessfulUpdates;
+    }
+
+    @Override
+    public long getTotalNumberOfContentsInIndex() {
+        return totalNumberOfContentsInIndex;
+    }
+
+    @Override
+    public void registerSuccessfulUpdate(CacheUpdateEvent event) {
+        numberOfSuccessfulUpdates++;
+        EventStatistics eventStatistics = null;
+        if (successfulUpdatesMap.containsKey(event.getContentId())) {
+            eventStatistics = successfulUpdatesMap.get(event.getContentId());
+            eventStatistics.addRequest();
+        } else {
+            eventStatistics = new EventStatistics(event.getContentId(), event
+                    .getUrl());
+        }
+
+        successfulUpdatesMap.put(event.getContentId(), eventStatistics);
+    }
+
+    @Override
+    public void registerFailedUpdate(CacheUpdateEvent event) {
+        numberOfFailedUpdates++;
+        EventStatistics eventStatistics = null;
+        if (failedUpdatesMap.containsKey(event.getContentId())) {
+            eventStatistics = failedUpdatesMap.get(event.getContentId());
+            eventStatistics.addRequest();
+        } else {
+            eventStatistics = new EventStatistics(event.getContentId(), event
+                    .getUrl());
+        }
+
+        failedUpdatesMap.put(event.getContentId(), eventStatistics);
+    }
+
+    @Override
+    public void registerTotalNumberOfContentsInIndex(long indexSize) {
+        this.totalNumberOfContentsInIndex = indexSize;
+    }
+}

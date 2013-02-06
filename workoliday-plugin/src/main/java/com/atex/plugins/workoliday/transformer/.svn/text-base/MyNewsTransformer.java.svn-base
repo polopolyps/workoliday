@@ -1,0 +1,125 @@
+package com.bellmedia.cache.transformer;
+
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.ResourceNotFoundException;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
+
+import com.bellmedia.util.PolicyUtils;
+import com.polopoly.cm.policy.ContentPolicy;
+import com.polopoly.util.StringUtil;
+
+/**
+ * 
+ */
+public class MyNewsTransformer extends ContentPolicy implements Transformer {
+
+	@Override
+	public String transform(byte[] resource, Map<String, Object> params) throws TransformationException {
+		Document document;
+		try {
+			document = DocumentHelper.parseText(new String(resource));
+			Element root = document.getRootElement();
+			@SuppressWarnings("unchecked")
+			List<Element> elements = root.element("channel").elements();
+			Namespace mediaNS = root.getNamespaceForPrefix("media");
+			Map<String, String> mynews = new HashMap<String, String>();
+			if (elements != null && !elements.isEmpty()) {
+				for (Element e : elements) {
+					String title = null;
+					String link = null;
+					String description = null;
+					String imageURL = null;
+					String imageCredit = null;
+					String imageTitle = null;
+
+					Element titleElement = e.element("title");
+					Element linkElement = e.element("link");
+					// <media:content
+					// url="http://rstorage.filemobile.com/storage/5370725/1281"
+					// type="image/jpeg"/>
+					Element mediaContentURLElement = e.element(new QName(
+							"content", mediaNS));
+					// <media:credit role="photographer">Larry
+					// Larry</media:credit>
+					Element mediaCreditElement = e.element(new QName("credit",
+							mediaNS));
+					// <media:title>Soaking up the sunshine</media:title>
+					Element mediaTitleElement = e.element(new QName("title",
+							mediaNS));
+					Element descriptionElement = e.element("description");
+					Element pubDateElement = e.element("pubDate");
+
+					title = getText(titleElement);
+					link = getText(linkElement);
+					description = getText(descriptionElement);
+					imageTitle = getText(mediaTitleElement);
+					imageCredit = getText(mediaCreditElement);
+
+					if (mediaContentURLElement != null) {
+						imageURL = mediaContentURLElement.attributeValue("url");
+					}
+
+
+					if (!StringUtil.isEmpty(title) && !StringUtil.isEmpty(link)) {
+						mynews.put("title", title);
+						mynews.put("link", link);
+						mynews.put("description", description);
+						mynews.put("imageURL", imageURL);
+						mynews.put("imageTitle", imageTitle);
+						mynews.put("imageCredit", imageCredit);
+						if (pubDateElement != null) {
+							mynews.put("pubDate", pubDateElement.getText());
+						}
+						break;
+					}
+				}
+			}
+
+			if (mynews.isEmpty()) {
+				throw new TransformationException(
+						"Failed to get my news article");
+			}
+
+			Velocity.init();
+			VelocityContext ctx = new VelocityContext();
+			ctx.put("mynews", mynews);
+
+			Writer writer = new StringWriter();
+			boolean evaluate = Velocity.evaluate(ctx, writer, "logTag",
+					PolicyUtils.getSingleValue("", this, "velocityCode"));
+			return writer.toString();
+			
+		} catch (DocumentException e) {
+			throw new TransformationException("Failed to get document", e);
+		} catch (ResourceNotFoundException e) {
+			throw new TransformationException("Failed to found resouce", e);
+		} catch (ParseErrorException e) {
+			throw new TransformationException("Failed to parse xml", e);
+		} catch (Exception e) {
+			throw new TransformationException(
+					"Exception when transforming document", e);
+		}
+	}
+
+	private String getText(Element e) {
+		String ret = null;
+		if (e != null) {
+			ret = e.getText();
+		}
+		return ret;
+	}
+
+}

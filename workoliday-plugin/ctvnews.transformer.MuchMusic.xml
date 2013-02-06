@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+
+ <!-- Grab HTML from MuchMusic feed -->
+ <content clear="true">
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>ctvnews.Entertainment.MuchMusic.Transformer.xsl</externalid>
+      </contentid>
+      <input-template>
+        <externalid>plugin.workoliday.TransformerXSL</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">CTVNews MuchMusic XSL Transformer</component>
+    <component group="xslCode" name="value"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:exslt="http://exslt.org/common"
+                xmlns:party="urn:schemas-gam-ca:xslt"
+                extension-element-prefixes="exslt party"
+                >
+   <xsl:output method="xml" omit-xml-declaration="yes" />
+ <xsl:param name="staticResourceDomain" select="''"/>
+ <xsl:template match="/"> 
+    <xsl:if test="//rss/channel"> 
+    <style>@import url('<xsl:value-of select="$staticResourceDomain"/>/bellmedia/ctvnews/css/EntertainmentFeeds.css'); </style>
+        <div class="entertainFeed" >
+          <span class="logoImage">
+<a><xsl:attribute name="href">http://www.muchmusic.com/</xsl:attribute><xsl:attribute name="target">_blank</xsl:attribute>
+<img src="{$staticResourceDomain}/bellmedia/common/img/logos/MUCH_logo.gif"  alt="MuchMusic" />
+</a>
+</span>
+      <xsl:for-each select="//item">
+              <xsl:if test="position() = 1">
+                   <span class="catHeaders">             
+                   <a><xsl:attribute name="href"><xsl:value-of select="link"/></xsl:attribute><xsl:value-of select="title" disable-output-escaping="yes"/></a>
+    </span>
+              </xsl:if>
+       </xsl:for-each>
+       <br clear="both"/>
+       </div>   
+    </xsl:if>     
+</xsl:template>
+</xsl:stylesheet>]]>
+  </component>
+ </content>
+</batch>

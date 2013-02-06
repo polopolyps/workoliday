@@ -1,0 +1,43 @@
+package com.bellmedia.servlet;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import com.bellmedia.servlet.MBeanInitializerListener;
+import com.bellmedia.util.BellmediaMBeanUtil;
+import com.polopoly.application.Application;
+import com.polopoly.application.servlet.ApplicationServletUtil;
+
+/**
+ * ContextListener for registering the MBeans that track all statistics of the
+ * update process of the ExternalDataCacheContent.
+ * 
+ */
+public class WorkolidayMBeanInitializer extends MBeanInitializerListener {
+
+	protected String COMPONENT_EXTERNAL_CACHE_UPDATE ="ExternalCacheUpdate";
+	
+	@Override
+	public void contextDestroyed(ServletContextEvent evt) {
+		super.contextDestroyed(evt);
+		BellmediaMBeanUtil.unregisterMBean(hostName, applicationName, LEVEL_FINE,
+				COMPONENT_EXTERNAL_CACHE_UPDATE, STATISTICS);
+	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent evt) {
+		// Initialize the HttpResourceManager for this application
+		super.contextInitialized(evt);
+		initExternalCacheUpdateStatisticsMBean();
+	}
+
+	private void initExternalCacheUpdateStatisticsMBean() {
+		if (CacheUpdateManager.statisticsMBean == null) {
+			CacheUpdateManager.statisticsMBean = new ExternalCacheUpdateStatistics();
+		}
+		BellmediaMBeanUtil.registerMBeanIfNotAlreadyRegistered(
+				CacheUpdateManager.statisticsMBean, hostName, applicationName, LEVEL_FINE,
+				COMPONENT_EXTERNAL_CACHE_UPDATE, STATISTICS);
+	}
+	
+}

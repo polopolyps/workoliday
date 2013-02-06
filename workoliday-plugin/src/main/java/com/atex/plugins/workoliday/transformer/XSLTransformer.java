@@ -1,0 +1,131 @@
+package com.atex.plugins.workoliday.transformer;
+
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.xml.sax.InputSource;
+
+import com.atex.plugins.workoliday.util.PolicyUtils;
+import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.policy.ContentPolicy;
+import com.polopoly.siteengine.field.properties.ComponentMapPolicy;
+import com.polopoly.util.StringUtil;
+
+public class XSLTransformer extends ContentPolicy implements Transformer {
+
+    private static final String COMPONENT_XSLT_CODE = "xslCode";
+    private static final String COMPONENT_PARAMETERS = "parameters";
+
+    @Override
+    public String transform(byte[] resource, Map<String, Object> params)
+            throws TransformationException {
+        String xml = new String(resource);
+        String xslt = PolicyUtils.getSingleValue("", this, COMPONENT_XSLT_CODE);
+
+        if (StringUtil.isEmpty(xml)) {
+            throw new TransformationException(
+                    "No XML was supplied, aborting transformation", null);
+        }
+
+        if (StringUtil.isEmpty(xslt)) {
+            throw new TransformationException(
+                    "No XSL was supplied, aborting transformation", null);
+        }
+
+        try {
+            return transform(xml.trim(), xslt, params);
+        } catch (UnsupportedEncodingException e) {
+            throw new TransformationException("Failed to transform source", e);
+        } catch (TransformerException e) {
+            throw new TransformationException("Failed to transform source", e);
+        } catch (Exception e) {
+            throw new TransformationException("Failed to transform source", e);
+        }
+    }
+
+    protected String transform(String xml, String xslt,
+            Map<String, Object> params) throws UnsupportedEncodingException,
+            TransformerException, CMException {
+
+        String transformedDocument = "";
+        try {
+            javax.xml.transform.Transformer transformer = null;
+            StringReader xslStream = new StringReader(xslt);
+            TransformerFactory transformerFactory = TransformerFactory
+                    .newInstance();
+            transformer = transformerFactory.newTransformer(new StreamSource(
+                    xslStream));
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,
+                    "yes");
+
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+            // Add xslt parameters coming from the template
+            Map<String, String> xsltParameters = getParameters();
+            if (xsltParameters != null) {
+                Iterator<Map.Entry<String, String>> it = xsltParameters
+                        .entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> pairs = it.next();
+                    transformer.setParameter(pairs.getKey(), pairs.getValue());
+                }
+            }
+
+            if (params != null) {
+                Iterator<Entry<String, Object>> iterator = params.entrySet()
+                        .iterator();
+                if (iterator != null) {
+                    while (iterator.hasNext()) {
+                        Entry<String, Object> param = iterator.next();
+                        String key = param.getKey();
+                        Object value = param.getValue();
+
+                        if (!StringUtil.isEmpty(key) && null != value) {
+                            transformer.setParameter(key, value);
+                        }
+                    }
+                }
+            }
+
+            String charSet = "iso-8859-1";
+            if (xml.indexOf("UTF-8") > -1 || xml.indexOf("utf-8") > -1) {
+                charSet = "utf-8";
+            }
+
+            SAXSource input = new SAXSource(new InputSource(
+                    new ByteArrayInputStream(xml.getBytes(charSet))));
+            StringWriter output = new StringWriter();
+            transformer.transform(input, new StreamResult(output));
+
+            transformedDocument = output.toString();
+        } catch (Exception e) {
+            throw new TransformerException(e);
+        }
+
+        if (transformedDocument == null) {
+            transformedDocument = "";
+        }
+
+        return transformedDocument;
+    }
+
+    private Map<String, String> getParameters() throws CMException {
+        return ((ComponentMapPolicy) getChildPolicy(COMPONENT_PARAMETERS))
+                .getComponentMap();
+    }
+
+}

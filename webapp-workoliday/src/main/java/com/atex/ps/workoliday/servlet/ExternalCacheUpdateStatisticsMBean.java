@@ -1,0 +1,44 @@
+package com.atex.ps.workoliday.servlet;
+
+/**
+ * MBean interface for the ExternalCacheTimerTask. It exposes methods for
+ * getting statistics of the ExternalCacheTimerTask.
+ * 
+ */
+public interface ExternalCacheUpdateStatisticsMBean {
+
+    /**
+     * @return total number of ExternalCacheContent this task is responsible to
+     *         update.
+     */
+    long getTotalNumberOfContentsInIndex();
+
+    /**
+     * @return total number of successful updates.
+     */
+    long getNumberOfSuccessfulUpdates();
+
+    /**
+     * @return total number of failed updates.
+     */
+    long getNumberOfFailedUpdates();
+
+    /**
+     * Register a successful update of an ExternalCacheContent
+     * 
+     * @param contentId
+     *            ContentId of the ExternalCacheContent
+     * @param time
+     */
+    void registerSuccessfulUpdate(CacheUpdateEvent event);
+
+    void registerFailedUpdate(CacheUpdateEvent event);
+
+    void registerTotalNumberOfContentsInIndex(long indexSize);
+
+    String[] getSucceededUpdatesTopList();
+
+    String[] getFailedUpdatesTopList();
+
+    void resetStatistics();
+}

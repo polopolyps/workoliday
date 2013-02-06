@@ -1,0 +1,136 @@
+package com.atex.ps.workoliday.servlet;
+
+import java.rmi.RemoteException;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ejb.FinderException;
+import javax.servlet.ServletContext;
+
+import com.polopoly.application.Application;
+import com.polopoly.application.ApplicationComponent;
+import com.polopoly.cache.LRUSynchronizedUpdateCache;
+import com.polopoly.cache.SynchronizedUpdateCache;
+import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.client.CmClient;
+import com.polopoly.cm.client.EjbCmClient;
+import com.polopoly.cm.policy.PolicyCMServer;
+import com.polopoly.search.solr.PostFilteredSolrSearchClient;
+import com.polopoly.user.server.Caller;
+import com.polopoly.user.server.User;
+import com.polopoly.user.server.UserServer;
+
+public abstract class BaseTimerTask extends TimerTask {
+
+    private static final String CLASS = BaseTimerTask.class.getName();
+    private static Logger logger = Logger.getLogger(CLASS);
+
+    private ServletContext context;
+    private Caller caller = null;
+    private User user;
+    private String username;
+    private String password;
+
+    public BaseTimerTask(ServletContext context, String username,
+            String password) throws RemoteException, FinderException,
+            CMException {
+        this.context = context;
+        this.username = username;
+        this.password = password;
+
+        // Get the cm server
+        PolicyCMServer cmServer = getPolicyCMServer();
+        // Get a user
+        user = getUserServer().getUserByLoginName(this.username);
+
+        // Create a caller first time
+        updateCaller(cmServer);
+    }
+
+    public PostFilteredSolrSearchClient getInternalSearchClient() {
+        Application app = getApplication();
+
+        if (null != app) {
+            return (PostFilteredSolrSearchClient) app
+                    .getApplicationComponent("search_solrClientInternal");
+        }
+
+        logger
+                .log(Level.INFO,
+                        "No application configured in workoliday, search is not available.");
+        return null;
+    }
+
+    public PolicyCMServer getPolicyCMServer() {
+        // Try to get policy cm server using the Polopoly Application Framework.
+        Application app = getApplication();
+        PolicyCMServer ret = null;
+
+        if (app != null) {
+            CmClient client = (CmClient) app
+                    .getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME);
+
+            ret = client.getPolicyCMServer();
+        }
+        return ret;
+    }
+
+    public UserServer getUserServer() {
+
+        Application app = getApplication();
+        UserServer ret = null;
+
+        if (app != null) {
+            CmClient client = (CmClient) app
+                    .getApplicationComponent(EjbCmClient.DEFAULT_COMPOUND_NAME);
+
+            ret = client.getUserServer();
+        }
+
+        return ret;
+    }
+
+    /**
+     * Caller may timeout, in an non interactive application we need to check
+     * it's logged in. Caller is also only valid in thread that executes call.
+     */
+    protected void updateCaller(PolicyCMServer cmServer) throws CMException {
+        if (logger.isLoggable(Level.FINER))
+            logger.entering(CLASS, "updateCaller");
+        try {
+            try {
+                if (caller == null || !caller.isLoggedIn(getUserServer())) {
+                    caller = user.login(password, Caller.NOBODY_CALLER);
+                    logger.fine("Logging in " + user.getLoginName());
+                }
+            } catch (Exception e) {
+                logger.logp(Level.SEVERE, CLASS, "updateCaller",
+                        "Could not prepare caller", e);
+                throw new CMException("Could not update caller " + e, e);
+            }
+
+            // Set caller in current thread
+            cmServer.setCurrentCaller(caller);
+
+        } finally {
+            if (logger.isLoggable(Level.FINER))
+                logger.exiting(CLASS, "updateCaller");
+        }
+    }
+
+    protected SynchronizedUpdateCache getSynchronizedUpdateCache() {
+        Application app = getApplication();
+
+        if (app != null) {
+            ApplicationComponent applicationComponent = app
+                    .getApplicationComponent(LRUSynchronizedUpdateCache.DEFAULT_COMPOUND_NAME);
+            return (SynchronizedUpdateCache) applicationComponent;
+        }
+        return null;
+    }
+
+    private Application getApplication() {
+        return (Application) context.getAttribute("workoliday");
+    }
+}

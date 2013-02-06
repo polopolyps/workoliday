@@ -1,0 +1,240 @@
+package com.atex.ps.workoliday.servlet;
+
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ejb.FinderException;
+import javax.servlet.ServletContext;
+
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+
+import com.atex.plugins.workoliday.cache.ExternalDataCachePolicy;
+import com.polopoly.cache.CacheKey;
+import com.polopoly.cache.NullSynchronizedUpdateCache;
+import com.polopoly.cache.SynchronizedUpdateCache;
+import com.polopoly.cm.ContentIdFactory;
+import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.policy.PolicyCMServer;
+import com.polopoly.management.ServiceNotAvailableException;
+import com.polopoly.search.solr.PostFilter;
+import com.polopoly.search.solr.PostFilteredSolrSearchClient;
+import com.polopoly.search.solr.SearchResult;
+import com.polopoly.search.solr.SearchResultPage;
+import com.polopoly.search.solr.impl.SearchResultPageImpl;
+
+public class ExternalCacheTimerTask extends BaseTimerTask {
+
+    private static final String CLASS = ExternalCacheTimerTask.class.getName();
+    private static Logger logger = Logger.getLogger(CLASS);
+
+    protected final SynchronizedUpdateCache searchCache;
+    public static final int SEARCH_RESULT_CACHE_TIMEOUT = 1 * 60 * 1000;
+    public static final int SEARCH_RESULT_RETRY_DELAY = 2 * 1000;
+
+    private static final SolrQuery SOLR_QUERY = new SolrQuery(
+            "inputTemplate:plugin.workoliday.ExternalDataCache AND visibleOnline:true");
+
+    private Map<String, CacheUpdateEvent> eventMap;
+    final private int seconds;
+    private boolean warnOnceIfServiceUnavailable = false;
+
+    public ExternalCacheTimerTask(ServletContext context, final int seconds,
+            String username, String password) throws RemoteException,
+            CMException, FinderException {
+        super(context, username, password);
+        this.seconds = seconds;
+        SynchronizedUpdateCache searchCache = getSynchronizedUpdateCache();
+        this.searchCache = searchCache != null ? searchCache
+                : new NullSynchronizedUpdateCache();
+        eventMap = new HashMap<String, CacheUpdateEvent>();
+    }
+
+    @Override
+    public void run() {
+
+        PolicyCMServer policyCMServer = getPolicyCMServer();
+        if (policyCMServer != null) {
+            try {
+                updateCaller(policyCMServer);
+            } catch (CMException e) {
+                if (!warnOnceIfServiceUnavailable) {
+                    logger
+                            .log(
+                                    Level.WARNING,
+                                    "Failed to update caller, I won't continue working, sorry",
+                                    e);
+                    warnOnceIfServiceUnavailable = true;
+                }
+                return;
+            }
+        }
+
+        updateEventMap();
+
+        Set<Entry<String, CacheUpdateEvent>> entrySet = eventMap.entrySet();
+        CacheUpdateManager.getInstance().registerIndexSize(eventMap.size());
+        for (Entry<String, CacheUpdateEvent> entry : entrySet) {
+            CacheUpdateEvent event = entry.getValue();
+            if (event != null) {
+                event.decreaseTimeUntilNextUpdate(seconds);
+                logger.fine(event
+                        + " time until next update (after decrease): "
+                        + event.getTimeUntilNextUpdate());
+                if (event.getTimeUntilNextUpdate() <= 0) {
+                    event.resetTimeUntilNextUpdate();
+                    // Delegate the update so we can monitor it
+                    CacheUpdateManager.getInstance().updateExternalCache(event,
+                            policyCMServer);
+                }
+            }
+        }
+
+    }
+
+    private void populateCache(SearchResult searchResult) {
+
+        if (searchResult == null) {
+            logger.log(Level.WARNING,
+                    "Failed to get any search result, aborting");
+            return;
+        }
+
+        PolicyCMServer cmServer = getPolicyCMServer();
+
+        Iterator<SearchResultPage> iterator = searchResult.iterator();
+        List<String> contentIdsToKeep = new ArrayList<String>();
+        while (iterator.hasNext()) {
+            SearchResultPage searchResultPage = iterator.next();
+
+            if (searchResultPage instanceof SearchResultPageImpl) {
+                List<QueryResponse> queryResponses = ((SearchResultPageImpl) searchResultPage)
+                        .getQueryResponses();
+                // We only get one query response per page?!
+                for (QueryResponse qe : queryResponses) {
+                    for (SolrDocument solrDoc : qe.getResults()) {
+                        String contentIdStr = (String) solrDoc
+                                .getFieldValue("contentId");
+                        
+                        logger.fine("Getting document from SOLR contentId "
+                                + contentIdStr);
+                        try {
+
+                            ExternalDataCachePolicy policy = (ExternalDataCachePolicy) cmServer.getPolicy(ContentIdFactory
+                                    .createContentId(contentIdStr));
+                            CacheUpdateEvent event = null;
+                            // If event does not already exist, add it
+                            if (!eventMap.containsKey(contentIdStr)) {
+                                
+                                event = new CacheUpdateEvent(contentIdStr,
+                                        policy.getName(), policy.getUrl(),
+                                        policy.getUpdateInterval(), policy
+                                                .getHashValue());
+                            } else {
+                                // Update event only if policy has changed given
+                                // the indexed hash value
+                                event = eventMap.get(contentIdStr);
+                                // If the policy has changed, fetch it and read
+                                // the new values
+                                // Note, we could store the hashValue in the index but that would
+                                // require a change in the schema.xml and the mapping of the ExternalDataCache
+                                // Projects could implement that feature
+                                long hashValue = policy.getHashValue();
+                                if (hashValue != event.getHashValue()) {
+                                    event.setUpdateInterval(policy
+                                            .getUpdateInterval());
+                                    event.setUrl(policy.getUrl());
+                                    event.setName(policy.getName());
+                                    event.setHashValue(policy.getHashValue());
+                                    event.reset();
+                                    logger
+                                            .fine(contentIdStr
+                                                    + " put "
+                                                    + event
+                                                    + " has been updated in the index, fetching the policy for it, event hashvalue "
+                                                    + event.getHashValue()
+                                                    + " vs policy "
+                                                    + hashValue);
+                                }
+                            }
+                            eventMap.put(contentIdStr, event);
+                            contentIdsToKeep.add(contentIdStr);
+                        } catch (CMException e) {
+                            logger
+                                    .log(Level.WARNING,
+                                            "Failed to get info for id "
+                                                    + contentIdStr, e);
+                        }
+                    }
+                }
+            }
+
+        }
+        // Clear eventMap from old events that has been disabled or deleted
+        eventMap.keySet().retainAll(contentIdsToKeep);
+    }
+
+    protected void updateEventMap() {
+        // Get a cached search result or a new one
+        SearchResult searchResult = getSearchResult();
+        populateCache(searchResult);
+    }
+
+    protected SearchResult getSearchResult() {
+        CacheKey cacheKey = new CacheKey(ExternalCacheTimerTask.class,
+                SOLR_QUERY);
+        SearchResult result = null;
+        try {
+            result = (SearchResult) searchCache.get(cacheKey);
+        } catch (RuntimeException e) {
+            // Cache timeout
+            logger.log(Level.WARNING,
+                    "Failed to look up cached result for key=" + cacheKey, e);
+            return null;
+        }
+
+        if (result == null) {
+            // Cache returned null. We are now responsible for updating and MUST
+            // either put or release the cache. Using try/finally for that.
+            try {
+                result = search();
+            } catch (ServiceNotAvailableException e) {
+                logger
+                        .info("Solr search service is unavailable, can not update queue");
+                logger.log(Level.FINE, "Unable to perform search", e);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Unable to perform search", e);
+            } finally {
+                if (result != null) {
+                    searchCache.put(cacheKey, result,
+                            SEARCH_RESULT_CACHE_TIMEOUT);
+                } else {
+                    result = (SearchResult) searchCache.release(cacheKey,
+                            SEARCH_RESULT_RETRY_DELAY);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    protected SearchResult search() throws IllegalArgumentException,
+            SolrServerException, ServiceNotAvailableException, Exception {
+        // Try to get search service from servlet context
+        PostFilteredSolrSearchClient internalSearchClient = getInternalSearchClient();
+
+        return internalSearchClient.filteredSearch(SOLR_QUERY, 5,
+                (PostFilter[]) null);
+    }
+
+}

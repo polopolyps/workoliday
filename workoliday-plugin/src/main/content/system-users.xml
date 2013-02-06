@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content>
+    <metadata>
+      <contentid>
+        <major>UserData</major>
+        <externalid>208</externalid>
+      </contentid>
+    </metadata>
+    <value name="loginName">WORKOLIDAY</value>
+    <value name="password">D5nQJImF</value>
+    <component name="isCMUser" group="CMUser">false</component>
+    <component name="value" group="FirstName">WORKOLIDAY</component>
+    <component name="value" group="LastName">CRON JOB</component>
+    <component name="locale" group="polopoly.Client">en_US</component>
+    <contentref name="inputTemplateId" group="polopoly.Content">
+      <contentid>
+        <externalid>p.UserEditor</externalid>
+      </contentid>
+    </contentref>
+    <contentref group="CMUser" name="departmentRoot">
+      <contentid>
+        <major>Department</major>
+        <minor>0</minor>
+      </contentid>
+    </contentref>
+  </content>
+</batch>

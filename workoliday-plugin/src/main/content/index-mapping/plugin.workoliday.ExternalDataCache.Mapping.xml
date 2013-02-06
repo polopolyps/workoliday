@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+
+  <content clear="true">
+    <metadata>
+      <contentid>
+        <major>AppConfig</major>
+        <externalid>p.IndexMapping-internal-plugin.workoliday.ExternalDataCache</externalid>
+      </contentid>
+      <input-template>
+        <externalid>p.IndexMapping</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">Index mappings for the Workoliday Plugin's External Data Cache</component>
+    <component group="mapping" name="name.value">title</component>
+    <!-- Indexing of the policy's hashValue for optimized performance requires adding a stored field in schema.xml -->
+    <!-- component group="mapping" name="hashValue">hashValue</component-->
+  </content>
+
+  <content>
+    <metadata>
+      <contentid>
+        <major>AppConfig</major>
+        <externalid>p.InternalIndexDefinition</externalid>
+      </contentid>
+    </metadata>
+    <contentref group="mappers" name="plugin.workoliday.ExternalDataCache">
+      <contentid>
+        <externalid>p.IndexMapping-internal-plugin.workoliday.ExternalDataCache</externalid>
+      </contentid>
+    </contentref>
+  </content>
+</batch>

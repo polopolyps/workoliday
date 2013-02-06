@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template-definition version="1.0" xmlns="http://www.polopoly.com/polopoly/cm/app/xml">
+  <input-template name="plugin.workoliday.TransformerJS" label="com.atex.plugins.workoliday.TransformerJS">
+    <policy>com.atex.plugins.workoliday.transformer.JSTransformer</policy>
+    <editor>com.polopoly.cm.app.widget.OTopPolicyWidget</editor>
+    <viewer>com.polopoly.cm.app.widget.OTopPolicyWidget</viewer>
+    <type>Article</type>
+    <param name="ViewState_insert">false</param>
+    <param name="ViewState_copy">true</param>
+    <param name="cloneSecurityParent">current</param>
+    <param name="EditState_saveAndClose">true</param>
+    <param name="EditState_saveAndInsert">false</param>
+    <param name="EditState_saveAndFastInsert">false</param>
+    <param name="EditState_saveAndView">true</param>
+    <param name="EditNewState_saveAndClose">false</param>
+    <param name="EditNewState_saveAndInsert">false</param>
+    <param name="EditNewState_saveAndFastInsert">true</param>
+    <param name="EditNewState_saveAndView">false</param>
+    <param name="titleOfNewContent">com.atex.plugins.workoliday.Transformer.CreateNew</param>
+    <param name="renderTemplateIconInSelect">true</param>
+    <editor contextName="orchid_TOCENTRY">com.atex.plugins.baseline.widget.OContentListEntryBasePolicyWidget</editor>
+    <viewer contextName="orchid_TOCENTRY">com.atex.plugins.baseline.widget.OContentListEntryBasePolicyWidget</viewer>
+    
+    <!-- Limits the number of versions of this content -->
+    <field name="contentVersionLimiter" input-template="p.ContentVersionLimiter">
+      <param name="maxVersions">5</param>
+    </field>
+
+    <content-xml>
+      <component group="polopoly.Content" name="name">Transformer JS</component>
+    </content-xml>
+    <field name="name" input-template="p.ContentName" label="com.atex.plugins.workoliday.Transformer.Name" required="true">
+    </field>
+    <field name="urlPrefix" input-template="p.TextInput" label="com.atex.plugins.workoliday.TransformerJS.urlPrefix" required="true">
+      <policy>com.atex.plugins.workoliday.field.URLInputPolicy</policy>
+      <param name="maxlength">2048</param>
+      <param name="inlineHelp">true</param>
+      <help>TransformerJS.urlPrefix.help</help>
+    </field>
+    <field name="jsCode" input-template="p.siteengine.editor.CodeMirror" label="com.atex.plugins.workoliday.TransformerJS.jsCode">
+      <help>TransformerJS.jsCode.help</help>
+      <param name="inlineHelp">true</param>
+      <param name="height">50</param>
+      <param name="editorParameters">html lineNumbers</param>
+    </field> 
+  </input-template>
+</template-definition>

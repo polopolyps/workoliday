@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template-definition version="1.0" xmlns="http://www.polopoly.com/polopoly/cm/app/xml">
+  
+  <input-template name="plugin.workoliday.ExternalDataCache" label="com.atex.plugins.workoliday.ExternalDataCache">
+    <policy>com.atex.plugins.workoliday.cache.ExternalDataCachePolicy</policy>
+    <editor>com.polopoly.cm.app.widget.OTopPolicyWidget</editor>
+    <viewer>com.polopoly.cm.app.widget.OTopPolicyWidget</viewer>
+    <type>AppConfig</type>
+    <param name="titleOfNewContent">com.atex.plugins.workoliday.ExternalDataCache.CreateNew</param>
+    <param name="renderTemplateIconInSelect">true</param>
+    <editor contextName="orchid_TOCENTRY">com.atex.plugins.baseline.widget.OContentListEntryBasePolicyWidget</editor>
+    <viewer contextName="orchid_TOCENTRY">com.atex.plugins.baseline.widget.OContentListEntryBasePolicyWidget</viewer>
+    <param name="ViewState_insert">false</param>
+    <param name="EditState_saveAndClose">true</param>
+    <param name="EditState_saveAndInsert">false</param>
+    <param name="EditState_saveAndFastInsert">false</param>
+    <param name="EditState_saveAndView">true</param>
+    <param name="EditNewState_saveAndClose">false</param>
+    <param name="EditNewState_saveAndInsert">false</param>
+    <param name="EditNewState_saveAndFastInsert">true</param>
+    <param name="EditNewState_saveAndView">false</param>
+    <param name="ViewState_refresh">true</param>
+    
+    <!-- Limits the number of versions of this content -->
+    <field name="contentVersionLimiter" input-template="p.ContentVersionLimiter">
+      <param name="maxVersions">5</param>
+    </field>
+    <content-xml>
+      <component group="polopoly.Content" name="name">External Data Cache</component>
+    </content-xml>
+    <layout name="columns" input-template="p.ColumnHolder">
+      <layout name="leftColumn" input-template="p.Column" label="">
+        <param name="widthRelative">true</param>
+        <param name="width">70</param>
+        <field name="name" input-template="p.ContentName" label="com.atex.plugins.workoliday.ExternalDataCache.Name" required="true"/>
+        <field name="url" input-template="p.TextInput" label="com.atex.plugins.workoliday.ExternalDataCache.URL" required="true">
+          <policy>com.atex.plugins.workoliday.field.URLInputPolicy</policy>
+          <param name="maxlength">200</param>
+        </field>
+        <layout name="transformerContentSection" input-template="p.LabeledSection" label="com.atex.plugins.workoliday.ExternalDataCache.Transformer">
+          <field name="transformerContentCreator" input-template="p.ContentCreator" label="">
+            <param name="createWithSecurityParent">true</param>
+            <param name="securityParentAlias">content</param>
+            <param name="insertTargetAlias">content</param>
+            <param name="askInsertTarget">false</param>
+            <param name="insertionContentListName">transformer</param>
+            <param name="askInsertionContentListName">false</param>
+            <param name="askContentListPosition">false</param>
+            <param name="insertPosition">top</param>
+            <param name="showCategorySelectWithOneCategory">false</param>
+            <param name="showInLabel">true</param>
+            <idparam name="templateRoot">
+              <externalid>plugin.workoliday.TransformerTemplateRoot</externalid>
+            </idparam>
+          </field>
+          <field name="transformer" input-template="p.ContentListEntryContainer" label="">
+            <param name="contentListName">transformer</param>
+            <param name="showActionButtonsInViewMode">false</param>
+            <param name="showCutButton">false</param>
+          </field>
+        </layout>
+        <layout name="transformerCacheSection" input-template="p.LabeledSection" label="com.atex.plugins.workoliday.ExternalDataCache.LastCachedResult">
+        <field name="cache" input-template="p.TextOutput" label="">
+        </field> 
+        </layout>
+      </layout>
+      <layout name="rightColumn" input-template="p.Column" label="">
+        <param name="widthRelative">true</param>
+        <param name="width">30</param>
+        <field name="updateInterval" input-template="p.TextInput" label="com.atex.plugins.workoliday.ExternalDataCache.UpdateInterval">
+          <policy>com.atex.plugins.workoliday.field.BoundedIntegerInputPolicy</policy>
+          <param name="size">3</param>
+          <param name="default">180</param>
+          <param name="max">2880</param>
+          <param name="min">2</param>
+        </field>
+        <field name="enabled" input-template="p.OnlineState" label="com.atex.plugins.workoliday.ExternalDataCache.Enabled">
+            <help>com.atex.plugins.workoliday.ExternalDataCache.Enabled.Help</help>
+            <param name="initialOnlineState">true</param>
+        </field>
+      </layout>
+    </layout>  
+  </input-template>
+</template-definition>

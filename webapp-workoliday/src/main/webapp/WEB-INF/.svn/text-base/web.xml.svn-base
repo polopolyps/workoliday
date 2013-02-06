@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+                             http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+ 
+  <!-- #########################################################################
+       ## Application configuration
+       ######################################################################### -->
+  
+  <!-- Use this for the Polopoly Application Framework. -->
+  <context-param>
+    <param-name>p.applicationName</param-name>
+    <param-value>workoliday</param-value>
+  </context-param>
+  
+   <!-- #########################################################################
+       Filter producing application heartbeats triggering cache updates
+       and reconnect after server failures.
+       ######################################################################### -->
+  <filter>
+    <filter-name>pacemaker</filter-name>
+    <filter-class>com.polopoly.application.servlet.ApplicationHeartbeatFilter</filter-class>
+    <init-param>
+      <param-name>heartbeat.startThread</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  
+  <!-- filter-mapping>
+    <filter-name>pacemaker</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping-->
+  
+  <!-- #########################################################################
+       ## Servlet context listeners for application initialization.
+       ######################################################################### -->
+
+  <!-- Use this for the Polopoly Application Framework. -->
+  <listener>
+    <listener-class>com.bellmedia.servlet.WorkolidayServletContextListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.bellmedia.servlet.WorkolidayMBeanInitializer</listener-class>
+  </listener>
+    <servlet>
+        <servlet-name>ExternalCacheUpdater</servlet-name>
+        <servlet-class>com.bellmedia.servlet.ExternalCacheUpdaterServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+          <param-name>updateIntervalSeconds</param-name>
+          <param-value>10</param-value>
+        </init-param>
+        <init-param>
+          <param-name>username</param-name>
+          <param-value>WORKOLIDAY</param-value>
+        </init-param>
+         <init-param>
+          <param-name>password</param-name>
+          <param-value>D5nQJImF</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExternalCacheUpdater</servlet-name>
+        <url-pattern>/updateExternalCache</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+      <welcome-file>index.html</welcome-file>
+    </welcome-file-list>    
+</web-app>
