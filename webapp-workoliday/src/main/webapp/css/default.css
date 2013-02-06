@@ -52,3 +52,11 @@ h1 span {
   left:130px;
   top:20px;
 }
+
+p {
+   font-size: 0.9 em;
+}
+
+p span {
+   font-weight: bold;
+}

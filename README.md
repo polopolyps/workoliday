@@ -2,13 +2,17 @@
 The purpose of the workoliday project is to make it easy to integrate external content into Polopoly.
 This project consists of a Polopoly plugin, Workoliday Plugin and a Polopoly client web application.
 
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/src/docs/screenshots/workoliday.png "Workoliday")
+
+
 ### Use cases 
-* Display content coming from any type of external feed, RSS, XML, JSON. 
-* Cache your own elements or content that are slow.
+* Display content coming from any type of external source, HTML, RSS, XML, JSON. 
 * Expose your site's header and/or footer to other sites (to make a wordpress site look like your site ;).
+* Cache your own elements or content that are slow.
 
 ## How to use Workoliday
 In Polopoly you create a content called External Data Cache. You can find it on the page or site's sources tab.
+
 1. Enter the URL to the external resource
 2. If you need to transform the result before it gets stored on the content, you need to create a Transformer.
 3. Set an update interval on the content. The update of the content will be handled by the Workoliday webapp.
