@@ -2,7 +2,7 @@
 The purpose of the workoliday project is to make it easy to integrate external content into Polopoly.
 This project consists of a Polopoly plugin, Workoliday Plugin and a Polopoly client web application.
 
-![workoliday](https://github.com/polopolyps/workoliday/raw/master/src/docs/screenshots/workoliday.png "Workoliday")
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday.png "Workoliday")
 
 
 ### Use cases 
