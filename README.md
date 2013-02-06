@@ -14,10 +14,15 @@ This project consists of a Polopoly plugin, Workoliday Plugin and a Polopoly cli
 In Polopoly you create a content called External Data Cache. You can find it on the page or site's sources tab.
 
 1. Enter the URL to the external resource
-2. If you need to transform the result before it gets stored on the content, you need to create a Transformer.
+2. If you need to transform the result of the external resource before it gets stored on the content, you need to create a Transformer.
 3. Set an update interval on the content. The update of the content will be handled by the Workoliday webapp.
 4. Start the Workoliday web application if it is not already running and watch the magic! 
 
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-plugin.png "Workoliday")
+
+## How to start/stop the Workoliday webapp
+Start: http://localhost:8080/workoliday/updateExternalCache?action=start
+Stop: http://localhost:8080/workoliday/updateExternalCache?action=stop
 
 ## How to monitor Workoliday
 The Workoliday web application exposes some statistical data via JMX. 
