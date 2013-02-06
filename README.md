@@ -18,7 +18,7 @@ In Polopoly you create a content called External Data Cache. You can find it on 
 3. Set an update interval on the content. The update of the content will be handled by the Workoliday webapp.
 4. Start the Workoliday web application if it is not already running and watch the magic! 
 
-![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-plugin.png "Workoliday")
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-plugin.png "Polopoly template")
 
 ## How to start/stop the Workoliday webapp
 **Start**: http://localhost:8080/workoliday/updateExternalCache?action=start
@@ -30,6 +30,8 @@ The Workoliday web application exposes some statistical data via JMX.
 * How many content that is currently in the index
 * Number of successful/failed updates
 * Top list over successful/failed content ids and their resources they are requesting
+
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-monitoring.png "JMX Monitoring")
 
 ## How to add Workoliday to your project
 
