@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content clear="true">
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>test.workoliday.vmtransformer</externalid>
+      </contentid>
+      <input-template>
+        <externalid>plugin.workoliday.TransformerVM</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">TV Listings transformer</component>
+    <component group="tags" name="value">listing</component>
+    <component group="velocityCode" name="value"><![CDATA[
+      #set($calendar = $date.getCalendar())
+      #set($day1 = ${calendar.getTime()})
+      $calendar.add(5, 1)
+      #set($day2 = ${calendar.getTime()})
+      $calendar.add(5, 1)
+      #set($day3 = ${calendar.getTime()})
+      $calendar.add(5, 1)
+      #set($day4 = ${calendar.getTime()})
+      $calendar.add(5, 1)
+      #set($day5 = ${calendar.getTime()})
+
+      ## We get contentIdStr from the transformer context
+      #set($id = $contentIdStr.replace(".", "_"))
+      #set($tabViewId = "tabs_${id}")
+      ##Velocity workaround
+      #set($hash = '#')
+      <div class="element">
+        <div id="$tabViewId" class="flora">
+        <h3>What's On</h3>
+        <ul>
+          <li><a href="${hash}${tabViewId}_tab1"><span>$date.format("E", $day1)</span></a></li>
+          <li><a href="${hash}${tabViewId}_tab2"><span>$date.format("E", $day2)</span></a></li>
+          <li><a href="${hash}${tabViewId}_tab3"><span>$date.format("E", $day3)</span></a></li>
+          <li><a href="${hash}${tabViewId}_tab4"><span>$date.format("E", $day4)</span></a></li>
+          <li><a href="${hash}${tabViewId}_tab5"><span>$date.format("E", $day5)</span></a></li>
+        </ul>
+        #foreach($day in [$day1, $day2, $day3, $day4, $day5])
+        #set($dayOfWeek = $date.toCalendar($day).get(7))
+        <div id="${tabViewId}_tab${velocityCount}">
+          <div class="element list">
+             <ul>
+             #foreach($listing in $listings)
+                #if($dayOfWeek == $listing.day)
+                    <li><span>$listing.time</span> $listing.title</li>
+                #end
+             #end
+             </ul>
+          </div>
+        </div>
+        #end
+  </div>
+<script type="text/javascript">
+  jQuery(document).ready(function(){
+    jQuery("#${tabViewId}").tabs();
+  });
+</script>
+</div>
+]]>
+</component>
+</content>
+</batch>

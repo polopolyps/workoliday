@@ -94,7 +94,6 @@ public class RSSTransformer extends VelocityTransformer {
             addParamsToContext(ctx, params);
             addParamsToContext(ctx, VELOCITY_TOOLS);
             ctx.put("list", rssObjects);
-
             Writer writer = new StringWriter();
             boolean evaluate = Velocity.evaluate(ctx, writer,
                     "RSS Transformer - "

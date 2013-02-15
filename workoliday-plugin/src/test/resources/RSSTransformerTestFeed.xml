@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>News</title>
+    <link>http://atex.com/</link>
+    <description>A news feed to test the RSS Transformer with.</description>
+    <language>en-us</language>
+    <item>
+      <title>Massive manhunt continues for ex-cop suspected in L.A. shooting rampage</title>
+      <link>http://atex.com/0</link>
+      <description>Article 0 - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque dictum arcu et adipiscing. Praesent libero tellus, elementum in porta et, tincidunt ut neque.  </description>
+      <pubDate>Fri, 8 Feb 2013 09:00:20 GMT</pubDate>
+      <guid isPermaLink="false">1.1148419</guid>
+    </item>
+    <item>
+      <title>21,900 jobs lost in January, unemployment rate falls to 7 per cent</title>
+      <link>http://atex.com/1</link>
+      <description>Article 1 - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque dictum arcu et adipiscing. Praesent libero tellus, elementum in porta et, tincidunt ut neque. </description>
+      <pubDate>Fri, 8 Feb 2013 09:11:20 GMT</pubDate>
+      <guid isPermaLink="false">1.1148419</guid>
+    </item>
+    <item>
+      <title>De Beers says blockade of diamond mine near Attawapiskat is over</title>
+      <link>http://atex.com/2</link>
+      <description>Article 2 -Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque dictum arcu et adipiscing. Praesent libero tellus, elementum in porta et, tincidunt ut neque. </description>
+      <pubDate>Fri, 8 Feb 2013 09:22:20 GMT</pubDate>
+      <guid isPermaLink="false">1.1148419</guid>
+    </item>
+    <item>
+      <title>Alberta clipper and Texas low combining forces over Ontario, Quebec</title>
+      <link>http://atex.com/3</link>
+      <description>Article 3 - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque dictum arcu et adipiscing. Praesent libero tellus, elementum in porta et, tincidunt ut neque. </description>
+      <pubDate>Fri, 8 Feb 2013 09:33:20 GMT</pubDate>
+      <guid isPermaLink="false">1.1148419</guid>
+    </item>
+    <item>
+      <title>Baird heads to Washington for first meeting with Kerry</title>
+      <link>http://atex.com/4</link>
+      <description>Article 4 - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque dictum arcu et adipiscing. Praesent libero tellus, elementum in porta et, tincidunt ut neque. </description>
+      <pubDate>Fri, 8 Feb 2013 09:44:20 GMT</pubDate>
+      <guid isPermaLink="false">1.1148419</guid>
+    </item>
+    <item>
+      <title>Prosecutors seek life sentence for beard-cutting attacks on Amish in Ohio</title>
+      <link>http://atex.com/5</link>
+      <description>Article 5 - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pellentesque dictum arcu et adipiscing. Praesent libero tellus, elementum in porta et, tincidunt ut neque. </description>
+      <pubDate>Fri, 8 Feb 2013 09:55:20 GMT</pubDate>
+      <guid isPermaLink="false">1.1148419</guid>
+    </item>
+  </channel>
+</rss>

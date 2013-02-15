@@ -1,0 +1,11 @@
+id:.externaldatacache
+inputtemplate:plugin.workoliday.ExternalDataCache
+name:Dummy External Data Cache
+component:cache:value:<p>Hello Transformer Element</p>
+component:updateInterval:value:180
+
+id:.element
+inputtemplate:plugin.workoliday.TransformerElement
+name:Transformer Element Test
+component:contenttype:value:text/html
+ref:source:reference:.externaldatacache

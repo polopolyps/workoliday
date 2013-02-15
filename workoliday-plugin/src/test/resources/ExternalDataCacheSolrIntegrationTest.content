@@ -1,0 +1,23 @@
+id:.1
+inputtemplate:plugin.workoliday.ExternalDataCache
+securityparent:p.SecurityRootDepartment
+name:ExternalDataCacheSolrIntegrationTest 1
+component:p.Content.state:onlineState:true
+component:updateInterval:value:180
+component:url:value:http\://dummyurl
+
+id:.2
+inputtemplate:plugin.workoliday.ExternalDataCache
+securityparent:p.SecurityRootDepartment
+name:ExternalDataCacheSolrIntegrationTest 2
+component:p.Content.state:onlineState:true
+component:updateInterval:value:180
+component:url:value:http\://dummyurl
+
+id:.3
+inputtemplate:plugin.workoliday.ExternalDataCache
+securityparent:p.SecurityRootDepartment
+name:ExternalDataCacheSolrIntegrationTest 3
+component:p.Content.state:onlineState:false
+component:updateInterval:value:180
+component:url:value:http\://dummyurl

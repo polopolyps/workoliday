@@ -49,6 +49,11 @@
       <name>Polopoly Plugins</name>
       <url>http://maven.polopoly.com/nexus/content/groups/polopoly-plugins</url>
     </repository>
+    <repository>
+      <id>polopoly-ps</id>
+      <name>Polopoly Professional Services</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-ps</url>
+    </repository>
   </repositories>
 
   <pluginRepositories>

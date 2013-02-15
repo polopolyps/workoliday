@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+ <content clear="true">
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>test.workoliday.xsltransformer</externalid>
+      </contentid>
+      <input-template>
+        <externalid>plugin.workoliday.TransformerXSL</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">Traffic Time  XSL Transformer</component>
+    <component group="xslCode" name="value"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="html" omit-xml-declaration="yes"/>
+  <xsl:template match="/">
+  <style>
+  .traffic{
+    border-left:1px solid #b5b5b5;
+    border-top:1px solid #b5b5b5;
+    font-family:Arial, Helvetica, sans-serif;
+    width:580px!important;
+  }
+  .traffic .header{
+    font-size:12px;
+    font-weight:bold;
+    height:23px;
+  }
+  .traffic td{
+    border-bottom:1px solid #b5b5b5;
+    border-right:1px solid #b5b5b5;
+    padding:5px;
+    font-variant:normal;
+    font-size:11px;
+    background-color:#ffffff;
+  }
+  .delaymin{
+    color:#FF0000;
+    font-weight:bold;
+  }
+  .ideal{
+    color:#006600;
+  }
+  </style>
+  <table class="traffic" cellspacing="0" cellpadding="0" border="0">  
+  <tr>
+    <td width="300" class="header">Route</td>  
+    <td width="70" class="header" align="center">Current</td>  
+    <td width="80" class="header" align="center">Ideal</td>  
+    <td width="60" class="header" align="center">Delay</td>
+    <td width="70" class="header" align="center">Percentage</td>  
+  </tr>
+  <xsl:for-each select="routes/route">
+  <tr>
+    <td><xsl:value-of select="@name"/></td>
+    <td align="center"><xsl:value-of select="@curtt"/></td>
+    <td class="ideal" align="center"><xsl:value-of select="@idtt"/></td>
+    <td class="delaymin" align="center"><xsl:value-of select="@delaymin"/> </td>
+    <td align="center"><xsl:value-of select="@pct"/></td>
+  </tr>
+  </xsl:for-each>
+  </table>
+  </xsl:template>
+</xsl:stylesheet>]]>
+  </component>
+ </content>
+</batch>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<routes>
+    <route id="2426" name="GDNR WESTBOUND (DON VALLEY PKWY TO JAMESON AVE.)" curtt="23 MIN" idtt="7 MIN" delaymin="16 MIN" pct="+229%" updated="2013-01-24 03:32:23 PM" bgcolor="#ff0000" />
+    <route id="585" name="DVP NORTHBOUND (GARDINER TO HWY. 401)" curtt="25 MIN" idtt="12 MIN" delaymin="13 MIN" pct="+108%" updated="2013-01-24 03:32:23 PM" bgcolor="#ff0000" />
+    <route id="3744" name="LAKE SHORE BLVD W FROM COXWELL TO KINGSWAY" curtt="22 MIN" idtt="11 MIN" delaymin="11 MIN" pct="+100%" updated="2013-01-24 03:32:23 PM" bgcolor="#ff0000" />
+    <route id="661" name="GARDINER WESTBOUND (DVP TO HWY. 427)" curtt="23 MIN" idtt="13 MIN" delaymin="10 MIN" pct="+77%" updated="2013-01-24 03:32:23 PM" bgcolor="#ff0000" />
+    <route id="653" name="404 NORTHBOUND (GARDINER TO BLOOMINGTON RD.)" curtt="39 MIN" idtt="27 MIN" delaymin="12 MIN" pct="+44%" updated="2013-01-24 03:32:23 PM" bgcolor="#ff0000" />
+    <route id="2433" name="ALLEN SOUTHBOUND (HWY 401 TO EGLINTON)" curtt="5 MIN" idtt="4 MIN" delaymin="1 MIN" pct="+25%" updated="2013-01-24 03:32:23 PM" bgcolor="#ffff00" />
+    <route id="2397" name="401 EASTBOUND (KINGSTON RD. TO SALEM RD.)" curtt="10 MIN" idtt="9 MIN" delaymin="1 MIN" pct="+11%" updated="2013-01-24 03:32:23 PM" bgcolor="#ffff00" />
+</routes>

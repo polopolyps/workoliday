@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batch xmlns="http://www.polopoly.com/polopoly/cm/xmlio">
+  <content clear="true">
+    <metadata>
+      <contentid>
+        <major>Article</major>
+        <externalid>test.workoliday.rsstransformer</externalid>
+      </contentid>
+      <input-template>
+        <externalid>plugin.workoliday.TransformerRSS</externalid>
+      </input-template>
+    </metadata>
+    <component group="polopoly.Content" name="name">RSS 2.0 Transformer</component>
+    <component group="listLength" name="value">5</component>
+    <component group="showDateline" name="value">true</component>
+    <component group="showSummary" name="value">true</component>
+    <component group="velocityCode" name="value"><![CDATA[
+    #if($list && !$list.isEmpty())
+    <div class="element list">
+      <ul class="linklist">
+       #foreach($listEntry in $list)
+         <li>
+             #if($listEntry.pubDate && $showDateline == "true")
+                #set($itemDate = $date.toDate($listEntry.pubDate))
+                <span>$listEntry.pubDate</span>##$itemDate -> $date.format("H:m", $itemDate)</span>##$date.format("H:m", $listEntry.pubDate)</span>
+             #end
+             <a href="$listEntry.link">$listEntry.title</a>
+             #if($showSummary)
+               #if($listEntry.description)
+                  <p>$listEntry.description</p>
+               #end
+             #end
+         </li>
+       #end
+      </ul>
+    </div>
+    #end
+    ]]>
+</component>
+</content>
+</batch>

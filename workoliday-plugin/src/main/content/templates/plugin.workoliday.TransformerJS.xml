@@ -35,10 +35,10 @@
       <policy>com.atex.plugins.workoliday.field.URLInputPolicy</policy>
       <param name="maxlength">2048</param>
       <param name="inlineHelp">true</param>
-      <help>TransformerJS.urlPrefix.help</help>
+      <help>com.atex.plugins.workoliday.TransformerJS.urlPrefix.help</help>
     </field>
     <field name="jsCode" input-template="p.siteengine.editor.CodeMirror" label="com.atex.plugins.workoliday.TransformerJS.jsCode">
-      <help>TransformerJS.jsCode.help</help>
+      <help>com.atex.plugins.workoliday.TransformerJS.jsCode.help</help>
       <param name="inlineHelp">true</param>
       <param name="height">50</param>
       <param name="editorParameters">html lineNumbers</param>

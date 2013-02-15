@@ -1,0 +1,6 @@
+id:test.workoliday.jstransformer
+major:article
+inputtemplate:plugin.workoliday.TransformerJS
+name:JS Transformer Footer
+component:jsCode:value:alert("Test of js transformer");
+component:urlPrefix:value:http\://localhost\:8080
