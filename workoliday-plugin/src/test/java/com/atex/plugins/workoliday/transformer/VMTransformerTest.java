@@ -40,7 +40,6 @@ public class VMTransformerTest extends AbstractTransformerTest {
         VMTransformer transformer = (VMTransformer) cmServer.getPolicy(new ExternalContentId(TRANSFORMER_ID));
         // Read test xml file from test resources
         String result = transformer.transform(getResource("VMTransformerTestFeed.xml"), null);
-        System.out.println("Hello test -> " + result);
         Document doc = Jsoup.parseBodyFragment(result);
         assertEquals("Wrong title found for tabbed element", "What's On", doc.select("h3").text());
         
