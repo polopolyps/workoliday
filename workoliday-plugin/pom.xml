@@ -54,22 +54,28 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-     <groupId>commons-logging</groupId>
-     <artifactId>commons-logging</artifactId>
-     <version>1.0.4</version>
-    <scope>test</scope>
-    </dependency>
-   <dependency>
-    <groupId>org.jsoup</groupId>
-    <artifactId>jsoup</artifactId>
-    <version>0.2.2</version>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
       <scope>test</scope>
     </dependency>
-            
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>0.2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly.ps</groupId>
+      <artifactId>webtest</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -78,6 +84,20 @@
           <source>1.6</source>
           <target>1.6</target>
           <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <!--
+        The tests need to run in a polopoly env, so they will be
+        disabled in the test phase
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/*Test.java</exclude>
+          </excludes>
         </configuration>
       </plugin>
 
