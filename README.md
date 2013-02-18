@@ -18,9 +18,15 @@ In Polopoly you create a content called External Data Cache. You can find it on 
 3. Set an update interval on the content. The update of the content will be handled by the Workoliday webapp.
 4. Start the Workoliday web application if it is not already running and watch the magic! 
 
-![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-plugin.png "Polopoly template")
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-plugin.png "External Data Cache template")
+
+In the current implementation, the configuration of the external data cache is separated from web publishing (the cache template does not have its own output template). This was implemented due to permission requirements in the original project. To be able to display the cached content you need to create a Transformer Element on the page and insert the configuration content.
+
+![workoliday](https://github.com/polopolyps/workoliday/raw/master/workoliday-plugin/src/docs/screenshots/workoliday-transformerelement.png "Transformer element template")
 
 ## How to start/stop the Workoliday webapp
+The web application is configured to update the content with the user workoliday (web.xml). The workoliday user is automatically imported when the plugin is imported.
+
 **Start**: http://localhost:8080/workoliday/updateExternalCache?action=start
 
 **Stop**: http://localhost:8080/workoliday/updateExternalCache?action=stop
@@ -36,7 +42,7 @@ The Workoliday web application exposes some statistical data via JMX.
 ## How to add Workoliday to your project
 
 ### Binary dependency
-In the top pom.xml of your project, add a dependency to the workoliday plugin.
+The binary dependency is most useful for demo purposes. It requires a Greenfield Times installation, since it will add the workoliday templates to Greenfield Times content. In the top pom.xml of your project, add a dependency to the workoliday plugin.
 ```xml
 <dependencies>
     <dependency>
