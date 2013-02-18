@@ -34,7 +34,7 @@ import com.polopoly.testbase.TestBaseRunner;
  *
  */
 @RunWith(TestBaseRunner.class)
-@ImportTestContent
+@ImportTestContent(once=true, waitUntilContentsAreIndexed={"ExternalDataCacheSolrIntegrationTest.1", "ExternalDataCacheSolrIntegrationTest.2", "ExternalDataCacheSolrIntegrationTest.3"})
 public class ExternalDataCacheSolrIntegrationTest {
 
     private static final String CLASS = ExternalDataCacheSolrIntegrationTest.class.getSimpleName();
