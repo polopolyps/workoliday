@@ -39,11 +39,6 @@
       <version>${servlet-api.version}</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
-      <version>${polopoly.version}</version>
-    </dependency>
     <!-- Needed for the velocity transformer -->
     <dependency>
       <groupId>velocity-tools</groupId>

@@ -50,6 +50,12 @@ The binary dependency is most useful for demo purposes. It requires a Greenfield
         <artifactId>workoliday-plugin</artifactId>
         <version>1.0-SNAPSHOT</version>
      </dependency>
+    <dependency>
+        <groupId>com.atex.plugins</groupId>
+        <artifactId>workoliday-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <classifier>contentdata</classifier>
+     </dependency>
 </dependencies>
 ```
 If you want to start the workoliday web application along with all the other web applications running in Polopoly Nitro, add the following snippet in the top pom.xml of the project in the jetty plugin section.
