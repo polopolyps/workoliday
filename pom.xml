@@ -7,7 +7,7 @@
   <description>This is the Workoliday Project that contains the workoliday plugin a long with the workoliday web application.</description>
   <groupId>com.atex.ps.workoliday</groupId>
   <artifactId>top</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>pom</packaging>
 
   <properties>
