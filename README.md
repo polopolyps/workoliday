@@ -92,3 +92,11 @@ If you want to start the workoliday web application along with all the other web
   <contextPath>/workoliday</contextPath>
 </contextHandler>
 ```
+## Note on the Polopoly version
+Both the workoliday plugin and webapp depend on polopoly. The polopoly version stated in the pom's is the earliest compatible/tested version of polopoly (10.6.1). The workoliday plugin will use the polopoly version available in the context it's running in. Normally this would be the one available in the Polopoly GUI webapp where the plugin is running. The workoliday webapp on the other hand will pack a polopoly.jar file in it's WEB-INF/lib directory inside the generated workoliday.war. This means that to run the workoliday webapp against another version of polopoly you would currently have to rebuild the workoliday WAR file to have it match your version.
+
+Rebuild the webapp for another Polopoly version (10.8.0 in the example) by setting the polopoly.version property like this:
+```
+mvn install -Dpolopoly.version=10.8.0
+```
+The workoliday plugin and webapp are continuously tested on the latest version of polopoly as well as on the previous compatible versions . 
