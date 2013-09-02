@@ -48,12 +48,12 @@ The binary dependency is most useful for demo purposes. It requires a Greenfield
     <dependency>
         <groupId>com.atex.plugins</groupId>
         <artifactId>workoliday-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
      </dependency>
     <dependency>
         <groupId>com.atex.plugins</groupId>
         <artifactId>workoliday-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
         <classifier>contentdata</classifier>
      </dependency>
 </dependencies>
@@ -64,7 +64,7 @@ If you want to start the workoliday web application along with all the other web
   <warArtifact>
     <groupId>com.atex.ps.workoliday</groupId>
     <artifactId>workoliday</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <type>war</type>
   </warArtifact>
   <contextPath>/workoliday</contextPath>
@@ -87,7 +87,7 @@ Also add a dependency to the workoliday plugin:
     <dependency>
         <groupId>com.atex.plugins</groupId>
         <artifactId>workoliday-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
      </dependency>
 ...
 </dependencies>
@@ -98,7 +98,7 @@ If you want to start the workoliday web application along with all the other web
   <warArtifact>
     <groupId>com.atex.ps.workoliday</groupId>
     <artifactId>workoliday</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <type>war</type>
   </warArtifact>
   <contextPath>/workoliday</contextPath>
