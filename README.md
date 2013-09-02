@@ -80,6 +80,18 @@ modules to the project.
     <module>../workoliday/webapp-workoliday</module>
 </modules>
 ```
+
+Also add a dependency to the workoliday plugin:
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.atex.plugins</groupId>
+        <artifactId>workoliday-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+     </dependency>
+...
+</dependencies>
+```
 If you want to start the workoliday web application along with all the other web applications running in Polopoly Nitro, add the following snippet in the top pom.xml of the project in the jetty plugin section.
 ```xml
 <contextHandler implementation="org.mortbay.jetty.plugin.JettyWebAppContext">
