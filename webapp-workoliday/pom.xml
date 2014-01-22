@@ -7,7 +7,7 @@
   <packaging>war</packaging>
   <name>Workoliday Web application</name>
   <url>http://maven.apache.org</url>
-  
+
   <parent>
     <groupId>com.atex.ps.workoliday</groupId>
     <artifactId>top</artifactId>
@@ -16,16 +16,16 @@
   </parent>
 
   <dependencies>
-      <dependency>
-        <groupId>com.polopoly</groupId>
-        <artifactId>polopoly</artifactId>
-        <version>${polopoly.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.atex.plugins</groupId>
-        <artifactId>baseline</artifactId>
-        <version>${baseline.version}</version>
-      </dependency>
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>polopoly</artifactId>
+      <version>${polopoly.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.atex.plugins</groupId>
+      <artifactId>baseline</artifactId>
+      <version>${baseline.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.atex.plugins</groupId>
@@ -67,20 +67,20 @@
       <artifactId>velocity</artifactId>
       <version>1.5</version>
     </dependency>
-            
+
     <!-- For the HttpResourceManager -->
     <dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpclient</artifactId>
-    <version>4.2.3</version>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpcore</artifactId>
-    <version>4.2.3</version>
-  </dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.2.3</version>
+    </dependency>
   </dependencies>
-  
+
   <build>
     <finalName>workoliday</finalName>
     <!-- Include profile resources -->
