@@ -13,6 +13,11 @@
   <artifactId>workoliday-plugin</artifactId>
   <packaging>jar</packaging>
 
+  <properties>
+    <polopoly.version>10.6.1-fp1-2dcf82e</polopoly.version>
+    <baseline.version>2.0.4</baseline.version>
+  </properties>
+
   <organization>
     <name>Atex</name>
     <url>http://www.atex.com</url>
@@ -71,7 +76,7 @@
     <dependency>
       <groupId>com.atex.plugins</groupId>
       <artifactId>baseline</artifactId>
-      <version>2.0.4</version>
+      <version>${baseline.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.axis</groupId>
